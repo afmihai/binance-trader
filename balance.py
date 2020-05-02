@@ -10,6 +10,7 @@ from BinanceAPI import BinanceAPI
 
 import config
 
+
 class Binance:
 
     def __init__(self):
@@ -49,14 +50,14 @@ class Binance:
         for coin in coins['data']:
 
             if coin['quoteAsset'] == asset:
-
                 orders = self.client.get_order_books(coin['symbol'], 5)
-                lastBid = float(orders['bids'][0][0]) #last buy price (bid)
-                lastAsk = float(orders['asks'][0][0]) #last sell price (ask)
+                lastBid = float(orders['bids'][0][0])  # last buy price (bid)
+                lastAsk = float(orders['asks'][0][0])  # last sell price (ask)
 
-                profit = (lastAsk - lastBid) /  lastBid * 100
+                profit = (lastAsk - lastBid) / lastBid * 100
 
                 print('%.2f%% profit : %s (bid:%.8f-ask%.8f)' % (profit, coin['symbol'], lastBid, lastAsk))
+
 
 try:
 

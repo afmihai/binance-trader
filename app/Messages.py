@@ -1,8 +1,9 @@
 # -*- coding: UTF-8 -*-
 # @yasinkuyu
 
-class Messages():
-    
+
+class Messages:
+
     @staticmethod
     def get(msg):
         print('Message : ' + msg)

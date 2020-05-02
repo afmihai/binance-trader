@@ -1,3 +1,5 @@
+from builtins import ImportError
+
 import time
 import hashlib
 import requests
@@ -8,9 +10,9 @@ try:
 # python3
 except ImportError:
     from urllib.parse import urlencode
- 
+
 class BinanceAPI:
-    
+
     BASE_URL = "https://www.binance.com/api/v1"
     BASE_URL_V3 = "https://api.binance.com/api/v3"
     PUBLIC_URL = "https://www.binance.com/exchange/public/product"
@@ -23,17 +25,17 @@ class BinanceAPI:
         path = "%s/historicalTrades" % self.BASE_URL
         params = {"symbol": market, "limit": limit}
         return self._get_no_sign(path, params)
-        
+
     def get_trades(self, market, limit=50):
         path = "%s/trades" % self.BASE_URL
         params = {"symbol": market, "limit": limit}
         return self._get_no_sign(path, params)
-        
+
     def get_kline(self, market):
         path = "%s/klines" % self.BASE_URL
         params = {"symbol": market}
         return self._get_no_sign(path, params)
-        
+
     def get_ticker(self, market):
         path = "%s/ticker/24hr" % self.BASE_URL
         params = {"symbol": market}
@@ -50,7 +52,7 @@ class BinanceAPI:
 
     def get_products(self):
         return requests.get(self.PUBLIC_URL, timeout=30, verify=True).json()
-        
+
     def get_exchange_info(self):
         path = "%s/exchangeInfo" % self.BASE_URL
         return requests.get(path, timeout=30, verify=True).json()
@@ -59,7 +61,7 @@ class BinanceAPI:
         path = "%s/openOrders" % self.BASE_URL_V3
         params = {"symbol": market}
         return self._get(path, params)
-    
+
     def get_my_trades(self, market, limit = 50):
         path = "%s/myTrades" % self.BASE_URL_V3
         params = {"symbol": market, "limit": limit}
@@ -87,19 +89,19 @@ class BinanceAPI:
 
     def query_order(self, market, orderId):
         path = "%s/order" % self.BASE_URL_V3
-        params = {"symbol": market, "orderId": orderId}
+        params = {"symbol": market, "order_id": orderId}
         return self._get(path, params)
 
     def cancel(self, market, order_id):
         path = "%s/order" % self.BASE_URL_V3
-        params = {"symbol": market, "orderId": order_id}
+        params = {"symbol": market, "order_id": order_id}
         return self._delete(path, params)
 
     def _get_no_sign(self, path, params={}):
         query = urlencode(params)
         url = "%s?%s" % (path, query)
         return requests.get(url, timeout=30, verify=True).json()
-    
+
     def _sign(self, params={}):
         data = params.copy()
 
@@ -131,7 +133,7 @@ class BinanceAPI:
 
     def _order(self, market, quantity, side, rate=None):
         params = {}
-         
+
         if rate is not None:
             params["type"] = "LIMIT"
             params["price"] = self._format(rate)
@@ -142,12 +144,12 @@ class BinanceAPI:
         params["symbol"] = market
         params["side"] = side
         params["quantity"] = '%.8f' % quantity
-        
+
         return params
 
     def _format(self, price):
         return "{:.8f}".format(price)
-            
+
     def _delete(self, path, params={}):
         params.update({"recvWindow": 120000})
         query = urlencode(self._sign(params))
